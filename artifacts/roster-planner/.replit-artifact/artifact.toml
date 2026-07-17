@@ -16,7 +16,7 @@ run = "pnpm --filter @workspace/roster-planner run dev"
 [services.production]
 build = [ "pnpm", "--filter", "@workspace/roster-planner", "run", "build" ]
 serve = "static"
-publicDir = "artifacts/roster-planner/dist/public"
+publicDir = "artifacts/roster-planner/out"
 
 [[services.production.rewrites]]
 from = "/*"
