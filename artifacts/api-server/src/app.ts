@@ -1,8 +1,14 @@
 import express, { type Express } from "express";
 import cors from "cors";
-import pinoHttp from "pino-http";
+import * as pinoHttpModule from "pino-http";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import router from "./routes";
 import { logger } from "./lib/logger";
+
+// Handle CJS/ESM default export interop for pino-http
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const pinoHttp: (opts: any) => any =
+  (pinoHttpModule as any).default ?? pinoHttpModule;
 
 const app: Express = express();
 
@@ -10,14 +16,14 @@ app.use(
   pinoHttp({
     logger,
     serializers: {
-      req(req) {
+      req(req: IncomingMessage & { id?: unknown }) {
         return {
           id: req.id,
           method: req.method,
           url: req.url?.split("?")[0],
         };
       },
-      res(res) {
+      res(res: ServerResponse) {
         return {
           statusCode: res.statusCode,
         };
